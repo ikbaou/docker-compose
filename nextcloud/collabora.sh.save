@@ -1,0 +1,12 @@
+#!bin/bash
+rm -rf /etc/loolwsd/*.pem
+ln -s /etc/loolwsd/key.pem /etc/nginx/certs/key.pem
+ln -s /etc/nginx/certs/cert.pem 
+ln -s /etc/nginx/certs/fullchain/f.pem  /etc/loolwsd/ca-chain.cert.pem
+
+
+#/bin/cp -f /scripts/certs/*.pem /etc/loolwsd
+#/bin/mv /etc/loolwsd/fullchain.pem /etc/loolwsd/ca-chain.cert.pem
+
+#chmod u+x /start-libreoffice.sh
+#./start-libreoffice.sh

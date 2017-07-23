@@ -7,10 +7,10 @@ services:
       - 80:80
       - 443:443
     volumes:
-      - ~/nextcloud/proxy/conf.d:/etc/nginx/conf.d
-      - ~/nextcloud/proxy/vhost.d:/etc/nginx/vhost.d
-      - ~/nextcloud/proxy/html:/usr/share/nginx/html
-      - ~/nextcloud/proxy/certs:/etc/nginx/certs:ro
+      - /etc/nginx/conf.d
+      - /etc/nginx/vhost.d
+      - /usr/share/nginx/html
+      - /etc/nginx/certs
       - /var/run/docker.sock:/tmp/docker.sock:ro
     networks:
       - proxy-tier
@@ -23,7 +23,7 @@ services:
       - proxy
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ~/nextcloud/proxy/certs:/etc/nginx/certs:rw
+      - /proxy/certs:/etc/nginx/certs:rw
     restart: always
 
   web:
@@ -52,9 +52,9 @@ services:
     links:
       - db
     volumes:
-      - ~/nextcloud/apps:/var/www/html/apps
-      - ~/nextcloud/config:/var/www/html/config
-      - ~/nextcloud/data:/var/www/html/data
+      - /var/www/html/apps
+      - /var/www/html/config
+      - /var/www/html/data
     networks:
       - proxy-tier
     restart: always
@@ -63,7 +63,7 @@ services:
     image: mariadb
     container_name: db
     volumes:
-      - ~/nextcloud/db:/var/lib/mysql
+      - /var/lib/mysql
     environment:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
       - MYSQL_DATABASE=nextcloud
@@ -86,17 +86,9 @@ services:
     cap_add:
       - MKNOD
     environment:
-      - domain=${COLLAB_DOMAIN}
-      - DONT_GEN_SSL_CERT=true
-    ports:
-      - 9980:9980
+      - domain=${DOMAIN}
     networks:
       - proxy-tier
-    volumes_from:
-      - proxy
-    volumes:
-      - ./collabora.sh:/collabora.sh
-    entrypoint: bash /collabora.sh
     restart: always
 
 networks:
